@@ -9,6 +9,9 @@ const Routes = () => {
   router.route('/signup')
     .post(userController.registerUser);
 
+  router.route('/signin')
+    .post(userController.authenticateUser);
+
   return router;
 };
 
