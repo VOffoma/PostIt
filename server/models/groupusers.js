@@ -3,7 +3,8 @@ const Group = require('./group');
 
 module.exports = (sequelize, DataTypes) => {
   const GroupUsers = sequelize.define('GroupUsers', {
-    access: DataTypes.BOOL
+    access: DataTypes.BOOL,
+    role: DataTypes.STRING
   }, {
     classMethods: {
       associate: (models) => {
