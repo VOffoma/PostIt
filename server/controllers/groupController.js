@@ -5,6 +5,10 @@ function GroupController() {
     res.status(200).send({ greeting: 'hello world' });
   };
 
+  const addUser = (role) => {
+
+  };
+
   const createGroup = (req, res) => {
     models.Group.create({
       name: req.body.name,
@@ -22,12 +26,26 @@ function GroupController() {
   };
 
 
-  // const addUserToGroup = (req, res) => {  
-  // };
+  const addUserToGroup = (req, res) => {
+    models.Group.find({
+      where: {
+        id: parseInt(req.params.groupid)
+      }
+    })
+    .then((group) => {
+      group.UserGroups = {
+        role: 'Member'
+      };
+      req.user.addGroup(group);
+      return res.status(200).send(`${req.user.username} is now a member of ${group.name}`);
+    })
+    .catch(error => res.status(400).send(error));
+  };
 
   return {
     test: testRoute,
-    createGroup
+    createGroup,
+    addUserToGroup
   };
 }
 
