@@ -7,10 +7,13 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    queryInterface.addColumn('GroupUsers', 'role', {
-      type: Sequelize.STRING,
-      allowNull: false
-    });
+    return [
+      queryInterface.addColumn('Groups', 'access', {
+        type: Sequelize.ENUM('Private', 'Public'),
+        allowNull: false
+      }),
+      queryInterface.removeColumn('GroupUsers', 'access')
+    ];
   },
 
   down: (queryInterface, Sequelize) => {
@@ -21,6 +24,12 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.removeColumn('GroupUsers', 'role');
+    return [
+      queryInterface.removeColumn('Groups', 'access'),
+      queryInterface.addColumn('GroupUsers', 'access', {
+        type: Sequelize.STRING,
+        allowNull: false
+      })
+    ];
   }
 };

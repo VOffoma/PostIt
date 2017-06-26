@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: function (queryInterface, Sequelize) {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -7,13 +9,13 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    queryInterface.addColumn('GroupUsers', 'role', {
+    queryInterface.changeColumn('UserGroups', 'role', {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     });
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: function (queryInterface, Sequelize) {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -21,6 +23,9 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.removeColumn('GroupUsers', 'role');
+    queryInterface.changeColumn('UserGroups', 'role', {
+      type: Sequelize.ENUM('GroupAdmin', 'Member'),
+      allowNull: true
+    });
   }
 };

@@ -2,15 +2,15 @@ const express = require('express');
 
 
 const Routes = () => {
-  console.log('in user routes');
+  console.log('in group routes');
   const router = express.Router();
-  const userController = require('../controllers/userController')();
+  const groupController = require('../controllers/groupController')();
 
-  router.route('/signup')
-    .post(userController.registerUser);
+  router.route('/')
+    .post(groupController.createGroup);
 
-  router.route('/signin')
-    .post(userController.authenticateUser);
+  // router.route('/{groupId}/user')
+    // .post(groupController.addUserToGroup);
 
   return router;
 };
