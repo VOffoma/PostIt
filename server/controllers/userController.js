@@ -1,4 +1,5 @@
 const models = require('../models/index');
+const jwt = require('jsonwebtoken');
 
 function UserController() {
   const register = (req, res) => {
@@ -12,19 +13,23 @@ function UserController() {
   };
 
   const authenticate = (req, res) => {
-    models.User.find({ username: req.body.username, password: req.body.password })
-    .then(user => res.status(200).send(user))
-    .catch(error => res.status(400).send(error));
-  };
-  const testRoute = (req, res) => {
-    console.log('in testroute');
-    return res.status(200).send({ greeting: 'hello world' });
+    models.User.find({ username: req.body.username })
+    .then((user) => {
+      console.log(`user is ${user.username}`);
+      if (user.password !== req.body.password) {
+        res.status(400).send({ success: false, message: 'Authentication failed! Wrong Password!' });
+      } else {
+        const token = jwt.sign({ username: user.username }, 'VOR4MA.1');
+        console.log(`token is ${token}`);
+        res.status(200).send({ success: true, message: 'Authentication successfully', token });
+      }
+    })
+    .catch(error => res.status(404).send({ success: false, message: error || 'user not found' }));
   };
 
   return {
     registerUser: register,
-    authenticateUser: authenticate,
-    test: testRoute
+    authenticateUser: authenticate
   };
 }
 
