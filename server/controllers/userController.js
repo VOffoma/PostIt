@@ -19,8 +19,7 @@ function UserController() {
       if (user.password !== req.body.password) {
         res.status(400).send({ success: false, message: 'Authentication failed! Wrong Password!' });
       } else {
-        const token = jwt.sign({ username: user.username }, 'VOR4MA.1');
-        console.log(`token is ${token}`);
+        const token = jwt.sign({ id: user.id, username: user.username, email: user.email, password: user.password, createdAt: user.createdAt }, 'VOR4MA.1');
         res.status(200).send({ success: true, message: 'Authentication successfully', token });
       }
     })
