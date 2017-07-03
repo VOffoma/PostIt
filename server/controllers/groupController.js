@@ -1,12 +1,11 @@
 const models = require('../models/index');
 
 function GroupController() {
-  const testRoute = (req, res) => {
-    res.status(200).send({ greeting: 'hello world' });
-  };
-
-  const addUser = (role) => {
-
+  const addUser = (role, group, user) => {
+    group.UserGroups = {
+      role: role
+    };
+    user.addGroup(group);
   };
 
   const createGroup = (req, res) => {
@@ -16,11 +15,8 @@ function GroupController() {
       access: req.body.access
     })
     .then((group) => {
-      group.UserGroups = {
-        role: 'GroupAdmin'
-      };
-      req.user.addGroup(group);
-      return res.status(200).send(group);
+      addUser('GroupAdmin', group, req.user);
+      return res.status(200).send(`group ${group} has been successfully created`);
     })
     .catch(error => res.status(400).send(error));
   };
@@ -33,17 +29,13 @@ function GroupController() {
       }
     })
     .then((group) => {
-      group.UserGroups = {
-        role: 'Member'
-      };
-      req.user.addGroup(group);
+      addUser('Member', group, req.user);
       return res.status(200).send(`${req.user.username} is now a member of ${group.name}`);
     })
     .catch(error => res.status(400).send(error));
   };
 
   return {
-    test: testRoute,
     createGroup,
     addUserToGroup
   };
