@@ -15,8 +15,16 @@ function GroupController() {
       group.UserGroups = {
         role: 'GroupAdmin'
       };
-      req.user.addGroup(group);
-      return res.status(200).send(group);
+      models.User.find({
+        where: {
+          id: parseInt(req.user.id)
+        }
+      }).then((user) => {
+        group.addUser(user);
+        return res.status(200).send(group);
+      });
+      //
+      // req.user.addGroup(group);
     })
     .catch(error => res.status(400).send(error));
   };

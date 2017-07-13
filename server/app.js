@@ -14,7 +14,7 @@ const middlewareService = require('./services/middlewareService')();
 
 
 app.use('/api/user', userRoutes);
-app.use(middlewareService.isUserExisting);
+app.use(middlewareService.verifyToken);
 app.use('/api/group', groupRoutes);
 app.listen(port, () => {
   console.log(`i m listening on port ${port}`);

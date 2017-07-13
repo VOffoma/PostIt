@@ -2,7 +2,6 @@ const express = require('express');
 
 
 const Routes = () => {
-  
   const router = express.Router();
   const userController = require('../controllers/userController')();
 
@@ -11,6 +10,7 @@ const Routes = () => {
 
   router.route('/signin')
     .post(userController.authenticateUser);
+
 
   return router;
 };
