@@ -1,11 +1,18 @@
 const models = require('../models/index');
 
 function GroupController() {
-  const addUser = (role, group, user) => {
-    group.UserGroups = {
-      role: role
-    };
-    user.addGroup(group);
+  const addUser = (role, group, userId) => {
+    models.User.find({
+      where: {
+        id: userId
+      }
+    })
+    .then((user) => {
+      group.UserGroups = {
+        role
+      };
+      user.addGroup(group);
+    });
   };
 
   const createGroup = (req, res) => {
@@ -15,7 +22,13 @@ function GroupController() {
       access: req.body.access
     })
     .then((group) => {
-      addUser('GroupAdmin', group, req.user);
+      addUser('GroupAdmin', group, req.user.id);
+      if (req.body.membersId && req.body.membersId.length > 0) {
+        const membersIdArray = req.body.membersId;
+        for (let i = 0; i < membersIdArray.length; i += 1) {
+          addUser('Member', group, membersIdArray[i]);
+        }
+      }
       return res.status(200).send(`group ${group} has been successfully created`);
     })
     .catch(error => res.status(400).send(error));
