@@ -29,7 +29,7 @@ function GroupController() {
           addUser('Member', group, membersIdArray[i]);
         }
       }
-      return res.status(200).send(`group ${group} has been successfully created`);
+      return res.status(201).send(`group ${group} has been successfully created`);
     })
     .catch(error => res.status(400).send(error));
   };
@@ -43,7 +43,7 @@ function GroupController() {
     })
     .then((group) => {
       addUser('Member', group, req.user);
-      return res.status(200).send(`${req.user.username} is now a member of ${group.name}`);
+      return res.status(200).send({ success: true, message: 'user(s) has been successfully added' });
     })
     .catch(error => res.status(400).send(error));
   };
