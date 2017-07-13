@@ -1,8 +1,18 @@
 const models = require('../models/index');
 
 function GroupController() {
-  const testRoute = (req, res) => {
-    res.status(200).send({ greeting: 'hello world' });
+  const addUser = (role, group, userId) => {
+    models.User.find({
+      where: {
+        id: userId
+      }
+    })
+    .then((user) => {
+      group.UserGroups = {
+        role
+      };
+      user.addGroup(group);
+    });
   };
 
   const createGroup = (req, res) => {
@@ -12,30 +22,35 @@ function GroupController() {
       access: req.body.access
     })
     .then((group) => {
-      group.UserGroups = {
-        role: 'GroupAdmin'
-      };
-      models.User.find({
-        where: {
-          id: parseInt(req.user.id)
+      addUser('GroupAdmin', group, req.user.id);
+      if (req.body.membersId && req.body.membersId.length > 0) {
+        const membersIdArray = req.body.membersId;
+        for (let i = 0; i < membersIdArray.length; i += 1) {
+          addUser('Member', group, membersIdArray[i]);
         }
-      }).then((user) => {
-        group.addUser(user);
-        return res.status(200).send(group);
-      });
-      //
-      // req.user.addGroup(group);
+      }
+      return res.status(200).send(`group ${group} has been successfully created`);
     })
     .catch(error => res.status(400).send(error));
   };
 
 
-  // const addUserToGroup = (req, res) => {  
-  // };
+  const addUserToGroup = (req, res) => {
+    models.Group.find({
+      where: {
+        id: parseInt(req.params.groupid)
+      }
+    })
+    .then((group) => {
+      addUser('Member', group, req.user);
+      return res.status(200).send(`${req.user.username} is now a member of ${group.name}`);
+    })
+    .catch(error => res.status(400).send(error));
+  };
 
   return {
-    test: testRoute,
-    createGroup
+    createGroup,
+    addUserToGroup
   };
 }
 

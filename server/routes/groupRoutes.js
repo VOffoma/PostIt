@@ -9,6 +9,9 @@ const Routes = () => {
   router.route('/')
     .post(groupController.createGroup);
 
+  router.route('/:groupid/user')
+    .post(groupController.addUserToGroup);
+
   // router.route('/{groupId}/user')
     // .post(groupController.addUserToGroup);
 
