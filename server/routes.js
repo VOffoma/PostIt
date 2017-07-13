@@ -16,10 +16,10 @@ const Routes = () => {
   router.use(middlewareService.verifyToken);
 
   router.route('/users')
-     .get(userController.getAllUsers);
+      .get(userController.getAllUsers);
 
   router.route('/user{userId}/groups')
-     .get(userController.getAllUserGroups);
+      .get(userController.getAllUserGroups);
 
   router.route('/group')
     .post(groupController.createGroup);
