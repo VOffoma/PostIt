@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('./controllers/userController')();
 const groupController = require('./controllers/groupController')();
+const middlewareService = require('./services/middlewareService')();
 
 
 const Routes = () => {
@@ -11,6 +12,8 @@ const Routes = () => {
 
   router.route('/user/signin')
     .post(userController.authenticateUser);
+
+  router.use(middlewareService.verifyToken);
 
   router.route('/users')
      .get(userController.getAllUsers);
