@@ -29,7 +29,7 @@ function GroupController() {
           addUser('Member', group, membersIdArray[i]);
         }
       }
-      return res.status(201).send(`group ${group} has been successfully created`);
+      return res.status(201).send('group has been successfully created');
     })
     .catch(error => res.status(400).send(error));
   };
@@ -42,8 +42,14 @@ function GroupController() {
       }
     })
     .then((group) => {
-      addUser('Member', group, req.user);
-      return res.status(200).send({ success: true, message: 'user(s) has been successfully added' });
+      if (req.body.membersId && req.body.membersId.length > 0) {
+        const membersIdArray = req.body.membersId;
+        for (let i = 0; i < membersIdArray.length; i += 1) {
+          addUser('Member', group, membersIdArray[i]);
+        }
+        return res.status(200).send({ success: true, message: 'user(s) has been successfully added' });
+      }
+      return res.status(406).send({ success: false, message: 'no users were specified' });
     })
     .catch(error => res.status(400).send(error));
   };
