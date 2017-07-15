@@ -34,7 +34,6 @@ function GroupController() {
     .catch(error => res.status(400).send(error));
   };
 
-
   const addUserToGroup = (req, res) => {
     models.Group.find({
       where: {
@@ -55,11 +54,57 @@ function GroupController() {
   };
 
   const createMessage = (req, res) => {
-
+    models.Group.find({
+      where: {
+        id: parseInt(req.params.groupId)
+      }
+    })
+    .then((group) => {
+      if (!group || group == null) {
+        return res.status(404).send({ success: false, error: 'The group specified does not exist' });
+      }
+      models.GroupMessages.create({
+        content: req.body.content,
+        priority: req.body.priority,
+        groupId: req.params.groupId,
+        userId: req.user.id
+      })
+      .then((groupmessage) => {
+        res.status(201).send({ success: true, message: 'group message has been successfully created', groupmessage });
+      })
+      .catch((error) => {
+        res.status(400).send({ success: false, error });
+      });
+    })
+    .catch(error => res.status(400).send({ success: false, error }));
   };
 
   const getGroupMessages = (req, res) => {
-
+    models.Group.find({
+      where: {
+        id: parseInt(req.params.groupId)
+      }
+    })
+    .then((group) => { 
+      if (!group || group == null) {
+        return res.status(404).send({ success: false, error: 'The group specified does not exist' });
+      }
+      models.GroupMessages.findAll({
+        where: {
+          groupId: req.params.groupId
+        }
+      })
+      .then((groupmessages) => {
+        if (!groupmessages || groupmessages.length === 0) {
+          return res.status(200).send({ success: true, message: 'there are no messages in this group' });
+        }
+        res.status(200).send({ success: true, message: 'group messages has been successfully retrieved', groupmessages });
+      })
+      .catch((error) => {
+        res.status(400).send({ success: false, error });
+      });
+    })
+    .catch(error => res.status(400).send({ success: false, error }));
   };
 
   const getGroupUsers = (req, res) => {
