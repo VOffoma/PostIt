@@ -18,18 +18,18 @@ const Routes = () => {
   router.route('/users')
       .get(userController.getAllUsers);
 
-  router.route('/users/{userId}/groups')
+  router.route('/users/:userId/groups')
       .get(userController.getAllUserGroups);
 
   router.route('/groups')
     .post(groupController.createGroup)
     .get(groupController.getAllGroups);
 
-  router.route('/groups/{groupId}/users')
+  router.route('/groups/:groupId/users')
     .post(groupController.addUserToGroup)
     .get(groupController.getGroupUsers);
 
-  router.route('/groups/{groupId}/messages')
+  router.route('/groups/:groupId/messages')
     .post(groupController.createMessage)
     .get(groupController.getGroupMessages);
 
