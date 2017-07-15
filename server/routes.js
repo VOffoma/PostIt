@@ -7,10 +7,10 @@ const middlewareService = require('./services/middlewareService')();
 const Routes = () => {
   const router = express.Router();
 
-  router.route('/user/signup')
+  router.route('/users/signup')
     .post(userController.registerUser);
 
-  router.route('/user/signin')
+  router.route('/users/signin')
     .post(userController.authenticateUser);
 
   router.use(middlewareService.verifyToken);
@@ -18,23 +18,20 @@ const Routes = () => {
   router.route('/users')
       .get(userController.getAllUsers);
 
-  router.route('/user{userId}/groups')
+  router.route('/users/:userId/groups')
       .get(userController.getAllUserGroups);
 
-  router.route('/group')
-    .post(groupController.createGroup);
+  router.route('/groups')
+    .post(groupController.createGroup)
+    .get(groupController.getAllGroups);
 
-  router.route('/group/{groupId}/user')
-    .post(groupController.addUserToGroup);
+  router.route('/groups/:groupId/users')
+    .post(groupController.addUserToGroup)
+    .get(groupController.getGroupUsers);
 
-  router.route('/group/{groupId}/users')
-     .get(groupController.getGroupUsers);
-
-  router.route('/group/{groupId}/message')
-     .post(groupController.createMessage);
-
-  router.route('/group/{groupId}/messages')
-     .get(groupController.getGroupMessages);
+  router.route('/groups/:groupId/messages')
+    .post(groupController.createMessage)
+    .get(groupController.getGroupMessages);
 
   return router;
 };
