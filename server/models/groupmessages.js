@@ -12,12 +12,19 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    groupId: DataTypes.INTEGER
+    groupId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: (models) => {
         // associations can be defined here
-        GroupMessages.belongsTo(models.Group);
+        GroupMessages.belongsTo(models.Group, {
+          foreignKey: 'groupId',
+          onDelete: 'CASCADE',
+        });
+        GroupMessages.belongsTo(models.User, {
+          foreignKey: 'userId'
+        });
       }
     }
   });
