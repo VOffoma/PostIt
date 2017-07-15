@@ -89,7 +89,7 @@ function GroupController() {
       if (groups.length === 0) {
         res.status(200).send({ success: true, message: 'there are no groups created' });
       } else {
-        res.status(200).send({ success: true, message: 'groups gotten successfully', data: groups });
+        res.status(200).send({ success: true, message: 'groups gotten successfully', groups });
       }
     })
     .catch(error => res.status(400).send({ success: false, message: error }));
