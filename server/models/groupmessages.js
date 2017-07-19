@@ -3,10 +3,22 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [1, 100],
+          msg: 'message content can not be an empty string'
+        }
+      }
     },
     priority: {
       type: DataTypes.ENUM('Normal', 'Urgent', 'Critical'),
-      defaultValue: 'Normal'
+      defaultValue: 'Normal',
+      validate: {
+        isIn: {
+          args: ['Normal', 'Urgent', 'Urgent'],
+          msg: 'Priority is either Normal, Urgent or Critical'
+        }
+      }
     },
     read: {
       type: DataTypes.BOOLEAN,

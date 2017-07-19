@@ -1,6 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
   const UserGroups = sequelize.define('UserGroups', {
-    role: DataTypes.STRING,
+    role: {
+      type: DataTypes.ENUM('GroupAdmin', 'Member'),
+      defaultValue: 'Member',
+      validate: {
+        isIn: {
+          args: ['GroupAdmin', 'Member'],
+          msg: 'role can be either be Member or GroupAdmin'
+        }
+      }
+    },
     userID: DataTypes.INTEGER,
     groupID: DataTypes.INTEGER
   }, {
@@ -11,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  const User = sequelize.models.User;
-  const Group = sequelize.models.Group;
+  // const User = sequelize.models.User;
+  // const Group = sequelize.models.Group;
 
-  Group.belongsToMany(User, { through: UserGroups, foreignKey: 'groupID' });
-  User.belongsToMany(Group, { through: UserGroups, foreignKey: 'userID' });
+  // Group.belongsToMany(User, { through: UserGroups, foreignKey: 'groupID' });
+  // User.belongsToMany(Group, { through: UserGroups, foreignKey: 'userID' });
   return UserGroups;
 };
