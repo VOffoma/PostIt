@@ -8,7 +8,7 @@ const Routes = () => {
   const router = express.Router();
 
   router.route('/users/signup')
-    .post(userController.registerUser);
+    .post(middlewareService.hashPassword, userController.registerUser);
 
   router.route('/users/signin')
     .post(userController.authenticateUser);

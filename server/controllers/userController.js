@@ -1,5 +1,6 @@
 const models = require('../models/index');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 function UserController() {
   const register = (req, res) => {
@@ -13,14 +14,21 @@ function UserController() {
   };
 
   const authenticate = (req, res) => {
-    models.User.find({ username: req.body.username })
-    .then((user) => {
-      if (user.password !== req.body.password) {
-        res.status(400).send({ success: false, message: 'Authentication failed! Wrong Password!' });
-      } else {
-        const token = jwt.sign({ id: user.id, username: user.username }, 'VOR4MA.1');
-        res.status(200).send({ success: true, message: 'Authentication successfully', token });
+    console.log(req.body.username);
+    models.User.find({
+      where: {
+        username: req.body.username
       }
+    })
+    .then((user) => {
+      bcrypt.compare(req.body.password, user.password, (error, bcryptResp) => {
+        if (bcryptResp) {
+          const token = jwt.sign({ id: user.id, username: user.username }, 'VOR4MA.1');
+          res.status(200).send({ success: true, message: 'Authentication successfully', token });
+        } else {
+          res.status(400).send({ success: false, message: 'Authentication failed! Wrong Password!' });
+        }
+      });
     })
     .catch(error => res.status(404).send({ success: false, message: error || 'user not found' }));
   };
